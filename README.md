@@ -32,6 +32,9 @@ A real-time posture-correction example for the Luxonis OAK-4. Runs the neural-ne
    LAPTOP_IP = "192.168.1.100"  # replace with your laptop’s IP
    ```
 
+3. **Adjust posture detection thresholds**  
+   In `main.py` (around line 152), locate the `evaluate_posture()` function’s `angle_threshold` and `dy_threshold` parameters. Tweak these values to calibrate the sensitivity and match your ideal posture.
+
 3. **Start the listener on your laptop**  
    In one terminal, run:
    ```bash
