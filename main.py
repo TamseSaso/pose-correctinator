@@ -13,6 +13,14 @@ from utils.arguments import initialize_argparser
 from utils.annotation_node import AnnotationNode
 import numpy as np
 
+import socket
+
+# Network alert configuration – update with your laptop’s IP and desired port
+LAPTOP_IP = "192.168.178.37"  # replace with your laptop’s IP
+LAPTOP_PORT = 5005
+# UDP socket for sending posture alerts
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 DET_MODEL: str = "luxonis/yolov6-nano:r2-coco-512x288"
 PADDING = 0.1
 
@@ -166,7 +174,9 @@ with dai.Pipeline(device) as pipeline:
             # convert Keypoints to numpy array of shape (n_keypoints, 2)
             landmarks = np.array([[kp.x, kp.y] for kp in kps_msg.keypoints])
             if not evaluate_posture(landmarks):
-                print("Incorrect posture detected!")
+                # Notify laptop of incorrect posture
+                sock.sendto(b"bad_posture", (LAPTOP_IP, LAPTOP_PORT))
+                print("Incorrect posture detected! Sent alert to laptop.")
 
         key = visualizer.waitKey(1)
         if key == ord("q"):
